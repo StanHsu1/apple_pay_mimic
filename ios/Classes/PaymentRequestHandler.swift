@@ -185,6 +185,8 @@ extension PaymentRequestHandler: PKPaymentAuthorizationControllerDelegate {
                 id: paymentId,
                 shippingContact: APayContact.fromPK(contact)
         )
+        print("Stan@ QQ");
+        print(contact)
 
         channel.invokeMethod("didSelectShippingContact", arguments: encodeJson(request)) { any in
             guard let string = any as? String,
