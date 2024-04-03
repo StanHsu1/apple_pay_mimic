@@ -119,8 +119,12 @@ class ApplePayMimic {
 
   static Future<dynamic> _didSelectShippingContact(dynamic arguments) async {
     try {
-      final request = SelectShippingContactRequest.fromJson(jsonDecode(arguments as String) as Map);
-      final result = await _handler(request.id).delegate.didSelectShippingContact(request.shippingContact);
+      print('Stan@ ${arguments}');
+      final request = SelectShippingContactRequest.fromJson(
+          jsonDecode(arguments as String) as Map);
+      final result = await _handler(request.id)
+          .delegate
+          .didSelectShippingContact(request.shippingContact);
       final json = result.toJson();
 
       return jsonEncode(json);
