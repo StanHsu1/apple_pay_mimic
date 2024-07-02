@@ -188,22 +188,24 @@ extension PaymentRequestHandler: PKPaymentAuthorizationControllerDelegate {
         print("Stan@ QQ");
         print(contact.postalAddress?.street)
 
-        channel.invokeMethod("didSelectShippingContact", arguments: encodeJson(request)) { any in
-            guard let string = any as? String,
-                  let result: APayRequestShippingContactUpdate = decodeJson(string) else {
-                self.channel.invokeMethod("error", arguments: [
-                    "id": self.paymentId,
-                    "step": "didSelectShippingContact",
-                    "arguments": "\(any)",
-                ])
-                let result = PKPaymentRequestShippingContactUpdate()
-                result.status = PKPaymentAuthorizationStatus.failure
-                return completion(result)
+        DispatchQueue.main.async {
+            channel.invokeMethod("didSelectShippingContact", arguments: encodeJson(request)) { any in
+                guard let string = any as? String,
+                    let result: APayRequestShippingContactUpdate = decodeJson(string) else {
+                    self.channel.invokeMethod("error", arguments: [
+                        "id": self.paymentId,
+                        "step": "didSelectShippingContact",
+                        "arguments": "\(any)",
+                    ])
+                    let result = PKPaymentRequestShippingContactUpdate()
+                    result.status = PKPaymentAuthorizationStatus.failure
+                    return completion(result)
+                }
+
+                print(result.toPK().paymentSummaryItems)
+
+                completion(result.toPK())
             }
-
-            print(result.toPK().paymentSummaryItems)
-
-            completion(result.toPK())
         }
     }
 
